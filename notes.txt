@@ -1,0 +1,110 @@
+1. Create node project
+  -> npm init -y
+
+2. Build Image using docker
+  -> docker build .
+  -> docker build -t node-app .
+  -t stands for tag
+
+3. Show process
+  -> docker ps
+    - show running process
+  -> docker ps -a
+    - show all process
+
+4. Show images
+  -> docker image ls
+
+5. Run container
+  -> docker run -p 3000:3000 --name node-app node-app-img
+  -> docker run -d -p 3000:3000 --name node-app node-app-img
+  -d stands for detach mode. Release the terminal after running container
+
+6. Remove container
+  -> docker rm node-app
+  -> docker rm node-app -f
+  -f stands for force
+
+7. Show docker working directory
+  -> docker exec -it node-app bash
+
+8. Bind Mount
+  
+  For windows command prompt
+  -> docker run -d -v %cd%:/app -p 3000:3000 --name node-app node-app-img
+
+  For windows powershell / mac / linux
+  -> docker run -d -v ${pwd}:/app -p 3000:3000 --name node-app node-app-img
+
+- If we delete folder like node_modules from our directory
+then it will delete also from /app
+
+Anonymous volumes
+
+-> docker run -d -v ${pwd}:/app -v /app/node_modules -p 3000:3000 --name node-app node-app-img
+
+- Now we want to make read only volumes
+
+Read only Mount volumes
+-> docker run -d -v ${pwd}:/app:ro -v /app/node_modules -p 3000:3000 --name node-app node-app-img
+
+Remove volume + container
+-> docker rm node-app -fv
+
+Passing envrionment variable
+
+-> docker run -d -v ${pwd}:/app:ro -v /app/node_modules --env PORT=4000 -p 3000:4000 --name node-app node-app-img
+
+Use .env file instead of passing envrionment variable in command
+
+-> docker run -d -v ${pwd}:/app:ro -v /app/node_modules --env-file ./.env -p 3000:4000 --name node-app node-app-img
+
+
+Run Docker Compose
+- docker-compose up -d
+
+Remove Docker Compose
+- docker-compose down
+- docker-compose down -v
+
+Forcefully creates new image
+- docker-compose up -d --build
+
+Run dev and prod commands
+Dev command : docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+Prod command : docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+Dev command : docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+
+Remove docker compose container
+Dev command : docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+
+
+docker exec -it mongoContainerName bash
+- it will start mongo container 
+
+cd bin
+mongosh -u "root" -p "root"
+
+Shortcut to enter in mongo shell
+- docker exec -it mongoContainerName /bin/mongosh -u "root" -p "root"
+
+
+Now if we delete container then our database will also be deleted
+So the solution is to persist data using volumes
+
+Now we won't use -v flag while deleting container. Because we don't want to delete volumes that contains database
+
+Updated command to Remove docker compose container
+: docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
+
+
+
+Install ping in bash
+- apt-get update -y
+- apt-get install -y iputils-ping
+
+
+
+
+
